@@ -23,6 +23,7 @@ class LoadDatabase {
     return args -> {
       log.info("Preloading " + repository.save(new Player("David Beckham", "England", PositionEnum.defender, LocalDateTime.now().toLocalDate())));
       log.info("Preloading " + repository.save(new Player("Hristo Stoichkov", "Bulgaria", PositionEnum.forward,LocalDate.of(2021, 2, 2))));
+      log.info("Preloading " + repository.save(new Player("Raul", "Spain", PositionEnum.goalkeeper ,LocalDate.of(1986,1, 3))));
     };
   }
 }
