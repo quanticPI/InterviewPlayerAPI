@@ -3,7 +3,6 @@ package com.player.task.player.repository;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Predicate;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.player.task.entities.Player;
+import com.player.task.entities.PositionEnum;
 
 @Repository
 public class PlayerDAO implements IPlayerDAO {
@@ -26,7 +26,7 @@ public class PlayerDAO implements IPlayerDAO {
 	@Override
 	@Transactional(readOnly = true)
 	@SuppressWarnings("unchecked")
-	public List<Player> allPlayers() {
+	public List<Player> allPlayers() {		
 		List<Player> list = em.createQuery("from Player").getResultList();
 		if(!list.isEmpty()) {
 			Collections.sort(list, Comparator.comparing((Player p) -> p.getCreated_at()).reversed());
@@ -45,18 +45,26 @@ public class PlayerDAO implements IPlayerDAO {
 
 	@Override
 	@Transactional
-	public Player updatePlayer(Player newPlayer, String id) {
-		Player p = em.find(Player.class, id);
-		if (p != null) {
-			p.setName(newPlayer.getName());
-			p.setCountry(newPlayer.getCountry());
-			p.setPosition(newPlayer.getPosition());
-			p.setBirth_date(newPlayer.getBirth_date());
+	public Player updatePlayer(Player newPlayer, String id) throws Exception {
+		Player p = null;
+		try {
+			p = em.find(Player.class, id);
+			if (p != null) {
+				String name = newPlayer.getName().isEmpty() ? p.getName() : newPlayer.getName();
+				String country = newPlayer.getCountry().isEmpty() ? p.getCountry() : newPlayer.getCountry();
+				p.setName(name);
+				p.setCountry(country);
+				p.setPosition(newPlayer.getPosition());
+				p.setBirth_date(newPlayer.getBirth_date());
+			}
+		} catch (Exception e) {
+			throw e;
 		}
 		return p;
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
 	public List<Player> getPlayersByCountry(String country) {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Player> query = cb.createQuery(Player.class);
@@ -65,6 +73,17 @@ public class PlayerDAO implements IPlayerDAO {
 		
 		TypedQuery<Player> q = em.createQuery(query);
 		return q.getResultList();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<Player> getPlayersByPosition(PositionEnum position) {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Player> cq = cb.createQuery(Player.class);
+		Root<Player> root = cq.from(Player.class);
+		cq.where(cb.equal(root.get("position"), position));
+		TypedQuery<Player> query = em.createQuery(cq);
+		return query.getResultList();
 	}
 
 }

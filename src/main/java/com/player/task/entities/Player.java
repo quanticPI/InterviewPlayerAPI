@@ -14,7 +14,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-
 @Entity
 public class Player {
 
@@ -24,8 +23,11 @@ public class Player {
 	private String id;
 	
 	@NotEmpty
+	@NotNull
 	private String name;
+	
 	@NotEmpty
+	@NotNull
 	private String country;
 	private PositionEnum position;
 	
