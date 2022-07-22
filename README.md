@@ -11,7 +11,7 @@ java -jar PlayersTask.jar
 
 1. List all players (without pagination):
 ```
-http://localhost:8080/players
+curl -v http://localhost:8080/players
 ```
 
 2. Create new player: 
@@ -19,10 +19,10 @@ http://localhost:8080/players
 curl -v -X POST localhost:8080/players -H 'Content-type:application/json' -d '{"name":"Leo Messi", "country":"Argentina","position":"forward","birth_date":"2022-01-01"}'
 ```
 
-3. Update existing player:
+3. Update existing player. In this particular case `position` is updated. The name is kept as the original resource as it is empty and ignored:
 ```
-curl -v -X PUT localhost:8080/players/<id of player created in step 2> -H 'Content-type:application/json'-d\
-'{"name":"","country":"England","position":"goalkeeper","birth_date":"2022-01-11"}'
+curl -v -X PUT localhost:8080/players/<id_of_player_created_in_step_2> -H 'Content-type:application/json' -d\
+'{"name":"","country":"Argentina","position":"goalkeeper","birth_date":"2022-01-11"}'
 ```
 
 4. Filter players by `country`
