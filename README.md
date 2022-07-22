@@ -4,7 +4,7 @@ Required Java version: 11
 
 To run the server:
 ```
-java -jar PlayersTask.jar
+java -jar PlayersTask-0.0.1.jar
 ```
 
 ### Functionality
@@ -14,10 +14,12 @@ java -jar PlayersTask.jar
 curl -v http://localhost:8080/players
 ```
 
-2. Create new player: 
+2. Create new player:
+- NOTE: If name/country are empty returns BadRequest response.
 ```
 curl -v -X POST localhost:8080/players -H 'Content-type:application/json' -d '{"name":"Leo Messi", "country":"Argentina","position":"forward","birth_date":"2022-01-01"}'
 ```
+
 
 3. Update existing player. In this particular case `position` is updated. The name is kept as the original resource as it is empty and ignored:
 ```
